@@ -2,6 +2,7 @@ package com.mipt.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.mipt.android.ui.auth.AuthFragment
 import com.mipt.android.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, AuthFragment())
                     .commitNow()
         }
     }
