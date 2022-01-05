@@ -1,27 +1,38 @@
 package com.mipt.android.ui.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.launchWithErrorHandler
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
-    class Factory() : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return AuthViewModel() as T
-        }
+class AuthViewModel @Inject constructor(
+    private val tinkoffRepository: TinkoffRepository
+) : ViewModel() {
+
+    init {
+        viewModelScope.launchWithErrorHandler(block = {
+            tinkoffRepository.registerAccount()
+            print("")
+        }, onError = {
+            print("")
+        })
     }
 
-    val token: LiveData<String>
-        get() = _token
-
-    val error: LiveData<String>
+    val error: LiveData<String?>
         get() = _error
 
     private val _token = MutableLiveData<String>()
-    private val _error = MutableLiveData<String>()
+    private val _error = MutableLiveData<String?>()
 
-    fun onApply() {
-        print("APPLY")
+    fun onApply(token: String) {
+        if (isValidToken(token)) {
+            _token.postValue(token)
+        } else {
+            _error.postValue("Неверный токен")
+        }
+    }
+
+    private fun isValidToken(token: String): Boolean {
+        return token.isNotEmpty()
     }
 }
