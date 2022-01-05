@@ -3,8 +3,10 @@ package com.mipt.android.ui.auth
 import androidx.lifecycle.*
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.launchWithErrorHandler
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class AuthViewModel @Inject constructor(
     private val tinkoffRepository: TinkoffRepository
 ) : ViewModel() {

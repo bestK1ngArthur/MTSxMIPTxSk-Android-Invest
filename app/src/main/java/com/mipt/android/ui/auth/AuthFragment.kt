@@ -9,7 +9,9 @@ import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.databinding.AuthFragmentBinding
 import com.mipt.android.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.auth_fragment) {
     private val viewBinding by viewBinding(AuthFragmentBinding::bind)
     private val viewModel by viewModels<AuthViewModel>()
