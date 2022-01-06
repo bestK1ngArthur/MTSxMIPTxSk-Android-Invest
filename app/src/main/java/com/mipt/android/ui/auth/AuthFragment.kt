@@ -24,14 +24,30 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                 tokenTextView.setText(token)
             })
 
-            viewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            viewModel.accountID.observe(viewLifecycleOwner, Observer { accountID ->
+                if (accountID != null) {
+                    accountTextView.text = "Номер счёта: $accountID"
+                } else {
+                    accountTextView.text = null
+                }
+            })
+
+            viewModel.buttonText.observe(viewLifecycleOwner, Observer { buttonText ->
+                applyButton.text = buttonText
+            })
+
+            applyButton.setOnClickListener {
+                viewModel.onTap(tokenTextView.text.toString())
+            }
+
+            viewModel.toast.observe(viewLifecycleOwner, Observer { error ->
                 val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
                 toast.show()
             })
 
-            applyButton.setOnClickListener {
-                viewModel.onApply(tokenTextView.text.toString())
-            }
+            viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                progressBar.visibility = if (isLoading) View.VISIBLE else View.INVISIBLE
+            })
         }
     }
 }

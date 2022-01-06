@@ -18,7 +18,7 @@ class TinkoffRepositoryImpl @Inject constructor(
         return Json.decodeFromString<RegisterResponse>(jsonData)
     }
 
-    override suspend fun removeAccount() {
-        api.remove("ACCOUNT ID")
+    override suspend fun removeAccount(brokerAccountId: String) {
+        api.remove(brokerAccountId)
     }
 }

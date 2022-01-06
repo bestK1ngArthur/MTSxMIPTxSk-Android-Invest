@@ -1,4 +1,4 @@
-package com.mipt.android.di
+package com.mipt.android.preferences
 
 import android.content.SharedPreferences
 import javax.inject.Inject

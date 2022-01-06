@@ -17,8 +17,8 @@ interface TinkoffAPI {
         @Body request: RegisterRequest
     ) : APIResult
 
-    @POST("$URL_PREFIX/sandbox/sandbox/remove")
+    @POST("$URL_PREFIX/sandbox/remove")
     suspend fun remove(
-        @Query("type") brokerAccountId: String
+        @Query("brokerAccountId") brokerAccountId: String
     ) : APIResult
 }

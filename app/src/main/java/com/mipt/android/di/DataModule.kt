@@ -6,6 +6,7 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.TinkoffRepositoryImpl
 import com.mipt.android.data.api.TinkoffAPI
+import com.mipt.android.preferences.TokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
