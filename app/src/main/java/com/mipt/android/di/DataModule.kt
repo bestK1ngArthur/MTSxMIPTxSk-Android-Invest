@@ -1,13 +1,15 @@
 package com.mipt.android.di
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.TinkoffRepositoryImpl
 import com.mipt.android.data.api.TinkoffAPI
-
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -18,24 +20,31 @@ import retrofit2.Retrofit
 import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class NetworkModule {
+class DataModule {
     companion object {
+        @Provides
+        fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+            context.getSharedPreferences("main", Context.MODE_PRIVATE)
+
+        @Provides
+        @Singleton
+        fun provideTokenManager(sharedPreferences: SharedPreferences) = TokenManager(sharedPreferences)
+
         @Provides
         @Singleton
         fun provideApi(tokenManager: TokenManager): TinkoffAPI = Retrofit.Builder()
-            .baseUrl("https://api-invest.tinkoff.ru/openapi/sandbox/")
+            .baseUrl("https://api-invest.tinkoff.ru/")
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor { chain: Interceptor.Chain ->
+                        val token = tokenManager.getToken()
+                        val headerValue = if (token != null) "Bearer $token" else ""
                         val request = chain.request()
                             .newBuilder()
-                            .header("Authorization",
-                                tokenManager.getToken()?.map { "Bearer $it" }.toString()
-                            )
+                            .header("Authorization", headerValue)
                             .build()
 
                         chain.proceed(request)
@@ -60,7 +69,7 @@ abstract class NetworkModule {
             .create()
     }
 
-    @Binds
+    @Provides
     @Singleton
-    abstract fun getRepository(repositoryImpl: TinkoffRepositoryImpl): TinkoffRepository
+    fun getRepository(api: TinkoffAPI): TinkoffRepository = TinkoffRepositoryImpl(api)
 }

@@ -20,6 +20,10 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         with(viewBinding) {
+            viewModel.token.observe(viewLifecycleOwner, Observer { token ->
+                tokenTextView.setText(token)
+            })
+
             viewModel.error.observe(viewLifecycleOwner, Observer { error ->
                 val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
                 toast.show()
