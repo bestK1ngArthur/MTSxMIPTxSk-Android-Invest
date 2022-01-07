@@ -1,20 +1,23 @@
-package com.mipt.android
+package com.mipt.android.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.mipt.android.R
+import com.mipt.android.tools.navigate
 import com.mipt.android.ui.auth.AuthFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
+
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, AuthFragment())
-                    .commitNow()
+            supportFragmentManager.navigate(AuthFragment())
         }
     }
 }

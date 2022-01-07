@@ -38,6 +38,10 @@ class AuthViewModel @Inject constructor(
         get() = _isLoading
     private val _isLoading = MutableLiveData<Boolean>()
 
+    val isPortfolioShown: LiveData<Boolean>
+        get() = _isPortfolioShown
+    private val _isPortfolioShown = MutableLiveData<Boolean>()
+
     init {
         _token.postValue(tokenManager.getToken())
 
@@ -53,6 +57,7 @@ class AuthViewModel @Inject constructor(
         }
 
         _isLoading.postValue(false)
+        _isPortfolioShown.postValue(false)
     }
 
     fun onTap(token: String) {
@@ -106,6 +111,7 @@ class AuthViewModel @Inject constructor(
             _buttonText.postValue(context.getString(R.string.logout))
 
             _isLoading.postValue(false)
+            _isPortfolioShown.postValue(true)
         }, onError = {
             _isLoading.postValue(false)
             showToast("Неверный API токен")
