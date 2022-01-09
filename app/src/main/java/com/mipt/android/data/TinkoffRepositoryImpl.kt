@@ -14,11 +14,17 @@ class TinkoffRepositoryImpl @Inject constructor(
 ): TinkoffRepository {
     override suspend fun registerAccount(): RegisterResponse {
         val result = api.register(RegisterRequest("Tinkoff"))
-        var jsonData = Json.encodeToString(result.data)
+        val jsonData = Json.encodeToString(result.data)
         return Json.decodeFromString<RegisterResponse>(jsonData)
     }
 
     override suspend fun removeAccount(brokerAccountId: String) {
         api.remove(brokerAccountId)
+    }
+
+    override suspend fun getPortfolio(brokerAccountId: String) {
+        val result = api.getPortfolio(brokerAccountId)
+//        val jsonData = Json.encodeToString(result.data)
+//        return Json.decodeFromString<Sample>(jsonData)
     }
 }
