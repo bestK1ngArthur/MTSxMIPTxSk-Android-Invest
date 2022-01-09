@@ -3,6 +3,7 @@ package com.mipt.android.ui.portfolio
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
