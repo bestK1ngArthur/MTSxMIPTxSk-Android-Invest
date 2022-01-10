@@ -1,11 +1,16 @@
 package com.mipt.android.ui.portfolio
 
 import android.content.Context
+import android.icu.text.Transliterator
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.data.api.responses.portfolio.Position
+import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
 import com.mipt.android.preferences.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +36,10 @@ class PortfolioViewModel @Inject constructor(
         get() = _toast
     private val _toast = MutableLiveData<String?>()
 
+//    val listActive: LiveData<Position>
+//        get() = _listActive
+//    private val _listActive = MutableLiveData<Position>()
+
     init {
         _token.postValue(tokenManager.getToken())
 
@@ -39,11 +48,16 @@ class PortfolioViewModel @Inject constructor(
             _accountID.postValue(accountIDValue)
         }
 
-        getListItem()
+        Log.d("Admin", "Here");
+        //getListItem()
     }
 
     private fun getListItem() {
-
+        viewModelScope.launchWithErrorHandler(block = {
+            tinkoffRepository.getPortfolio(sessionManager.getBrokerAccountId());
+        }, onError = {
+            showToast("Error")
+        })
     }
 
     private fun showToast(message: String) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
@@ -22,7 +23,16 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
             profileButton.setOnClickListener {
                 showAuth()
             }
+
+//            viewModel.toast.observe(viewLifecycleOwner, { error ->
+//                val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
+//                toast.show()
+//            })
+
+            //viewModel.getListItem()
         }
+
+
     }
 
     private fun showAuth() {

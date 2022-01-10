@@ -1,5 +1,6 @@
 package com.mipt.android.data
 
+import android.util.Log
 import com.mipt.android.data.api.TinkoffAPI
 import com.mipt.android.data.api.requests.RegisterRequest
 import com.mipt.android.data.api.responses.RegisterResponse
@@ -22,9 +23,8 @@ class TinkoffRepositoryImpl @Inject constructor(
         api.remove(brokerAccountId)
     }
 
-    override suspend fun getPortfolio(brokerAccountId: String) {
+    override suspend fun getPortfolio(brokerAccountId: String?) {
         val result = api.getPortfolio(brokerAccountId)
-//        val jsonData = Json.encodeToString(result.data)
-//        return Json.decodeFromString<Sample>(jsonData)
+        Log.d("Admin", result.toString());
     }
 }
