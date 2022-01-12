@@ -30,4 +30,8 @@ interface TinkoffAPI {
     suspend fun getCandles(@Query("figi") figi: String, @Query("from") startDate: String,
                            @Query("to") endDate: String, @Query("interval") interval: String,
     ): APIResult<CandlesResponse>
+
+    @GET("$URL_PREFIX/market/search/by-figi")
+    suspend fun getStockInfo(@Query("figi") figi: String
+    ): APIResult<StockInfoResponse>
 }

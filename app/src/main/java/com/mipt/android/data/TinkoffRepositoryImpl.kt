@@ -4,6 +4,7 @@ import com.mipt.android.data.api.TinkoffAPI
 import com.mipt.android.data.api.requests.RegisterRequest
 import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.RegisterResponse
+import com.mipt.android.data.api.responses.StockInfoResponse
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -34,6 +35,11 @@ class TinkoffRepositoryImpl @Inject constructor(
         val endDate = "2021-08-19T18:38:33+03:00"
         val interval = "day"
         val result = api.getCandles(figi, startDate, endDate, interval)
+        return result.response ?: throw TinkoffRepositoryException("Response is null")
+    }
+
+    override suspend fun getStockInfo(figi: String): StockInfoResponse {
+        val result = api.getStockInfo(figi)
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
 }
