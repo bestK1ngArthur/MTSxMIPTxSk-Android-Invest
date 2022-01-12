@@ -6,24 +6,24 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
-import com.mipt.android.databinding.PortfolioFragmentBinding
+import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
 import com.mipt.android.ui.auth.AuthFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
-    private val viewBinding by viewBinding(PortfolioFragmentBinding::bind)
-    private val viewModel by viewModels<PortfolioViewModel>()
+class DetailsFragment : Fragment(R.layout.details_fragment) {
+    private val viewBinding by viewBinding(DetailsFragmentBinding::bind)
+    private val viewModel by viewModels<DetailsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(viewBinding) {
-            profileButton.setOnClickListener {
-                showAuth()
-            }
-        }
+//        with(viewBinding) {
+//            profileButton.setOnClickListener {
+//                showAuth()
+//            }
+//        }
     }
 
     private fun showAuth() {

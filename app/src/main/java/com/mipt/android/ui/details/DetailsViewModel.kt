@@ -5,6 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class PortfolioViewModel @Inject constructor() : ViewModel() {
+class DetailsViewModel @Inject constructor() : ViewModel() {
     // TODO: Implement the ViewModel
 }
