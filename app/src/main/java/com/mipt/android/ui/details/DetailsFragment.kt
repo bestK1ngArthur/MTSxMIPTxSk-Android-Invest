@@ -18,15 +18,24 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getStockInfo()
 
-//        with(viewBinding) {
-//            profileButton.setOnClickListener {
-//                showAuth()
-//            }
-//        }
+        with(viewBinding) {
+            backButton.setOnClickListener {
+                showDetails()
+            }
+            viewModel.stockName.observe(viewLifecycleOwner, { stockName ->
+                if (stockName != null) {
+                    stockNameTextView.text = "$stockName"
+                } else {
+                    stockNameTextView.text = null
+                }
+            })
+
+        }
     }
 
-    private fun showAuth() {
+    private fun showDetails() {
         parentFragmentManager.navigate(PortfolioFragment(), true)
     }
 }
