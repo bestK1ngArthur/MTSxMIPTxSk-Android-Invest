@@ -6,14 +6,20 @@ import androidx.fragment.app.commit
 import com.mipt.android.R.anim
 import com.mipt.android.R.id
 
-fun FragmentManager.navigate(fragment: Fragment) {
+fun FragmentManager.navigate(fragment: Fragment, isBack: Boolean = false) {
     commit(allowStateLoss = true) {
-        setCustomAnimations(
-            anim.slide_from_right,
-            anim.slide_to_left,
-            anim.slide_from_left,
-            anim.slide_to_right
-        )
+        if (isBack) {
+            setCustomAnimations(
+                anim.slide_from_left,
+                anim.slide_to_right
+            )
+        } else {
+            setCustomAnimations(
+                anim.slide_from_right,
+                anim.slide_to_left
+            )
+        }
+
         replace(id.main_activity_container, fragment)
         addToBackStack(null)
     }

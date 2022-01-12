@@ -27,6 +27,6 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
     }
 
     private fun showAuth() {
-        parentFragmentManager.navigate(AuthFragment())
+        parentFragmentManager.navigate(AuthFragment(), true)
     }
 }

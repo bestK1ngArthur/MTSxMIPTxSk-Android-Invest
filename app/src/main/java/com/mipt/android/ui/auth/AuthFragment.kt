@@ -55,6 +55,14 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                     showPortfolio()
                 }
             })
+
+            viewModel.isCloseButtonShown.observe(viewLifecycleOwner, { isCloseButtonShown ->
+                closeButton.visibility = if (isCloseButtonShown) View.VISIBLE else View.INVISIBLE
+            })
+
+            closeButton.setOnClickListener {
+                showPortfolio()
+            }
         }
     }
 

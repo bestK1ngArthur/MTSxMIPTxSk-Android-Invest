@@ -6,4 +6,5 @@
     <string name="profile">Профиль</string>
     <string name="how_to_get_token_name">Как получить доступ?</string>
     <string name="how_to_get_token">1) Зайдите в аккаунт на https://tinkoff.ru/.\n2) Перейдите в раздел инвестиций.\n3) Перейдите в настройки. Функция "Подтверждение сделок кодом" должна быть отключена.\n4) Выпустите токен OpenAPI для биржи и Sandbox. Скопируйте токен и сохраните его.</string>
+    <string name="portfolio">Портфолио</string>
 </resources>

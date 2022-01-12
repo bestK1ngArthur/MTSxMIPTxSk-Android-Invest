@@ -42,13 +42,12 @@ class AuthViewModel @Inject constructor(
         get() = _isPortfolioShown
     private val _isPortfolioShown = MutableLiveData<Boolean>()
 
+    val isCloseButtonShown: LiveData<Boolean>
+        get() = accountID.map { it != null }
+
     init {
         _token.postValue(tokenManager.getToken())
-
-        val accountIDValue = sessionManager.getBrokerAccountId()
-        if (accountIDValue != null) {
-            _accountID.postValue(accountIDValue)
-        }
+        _accountID.postValue(sessionManager.getBrokerAccountId())
 
         if (tokenManager.getToken() != null && sessionManager.isSessionExists()) {
             _buttonText.postValue(context.getString(R.string.logout))
