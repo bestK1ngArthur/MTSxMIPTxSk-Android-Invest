@@ -25,4 +25,9 @@ interface TinkoffAPI {
 
     @GET("$URL_PREFIX/user/accounts")
     suspend fun getUserAccounts() : APIResult<UserAccountsResponse>
+
+    @GET("$URL_PREFIX/market/candles")
+    suspend fun getCandles(@Query("figi") figi: String, @Query("from") startDate: String,
+                           @Query("to") endDate: String, @Query("interval") interval: String,
+    ): APIResult<CandlesResponse>
 }

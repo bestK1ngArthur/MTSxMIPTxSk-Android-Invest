@@ -32,6 +32,14 @@ class AuthFragment : Fragment(R.layout.auth_fragment) {
                     accountTextView.text = null
                 }
             })
+            viewModel.startDate.observe(viewLifecycleOwner, { startDate ->
+                if (startDate != null) {
+                    dateTextView.text = "Дата начала: $startDate"
+                } else {
+                    dateTextView.text = null
+                }
+            })
+
 
             viewModel.buttonText.observe(viewLifecycleOwner, { buttonText ->
                 applyButton.text = buttonText

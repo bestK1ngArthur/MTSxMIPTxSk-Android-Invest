@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.preferences.TokenManager
 import com.mipt.android.launchWithErrorHandler
@@ -25,7 +26,11 @@ class AuthViewModel @Inject constructor(
 
     val accountID: LiveData<String?>
         get() = _accountID
-    private val _accountID = MutableLiveData<String?>()
+    private var _accountID = MutableLiveData<String?>()
+
+    val startDate: LiveData<String?>
+        get() = _startDate
+    private var _startDate = MutableLiveData<String?>()
 
     val buttonText: LiveData<String>
         get() = _buttonText
@@ -49,6 +54,10 @@ class AuthViewModel @Inject constructor(
     init {
         _token.postValue(tokenManager.getToken())
         _accountID.postValue(sessionManager.getBrokerAccountId())
+        _startDate.postValue(sessionManager.getCandles())
+        print("WHERHEHRHE")
+        print(_accountID)
+
 
         if (tokenManager.getToken() != null && sessionManager.isSessionExists()) {
             _buttonText.postValue(context.getString(R.string.logout))
@@ -77,6 +86,7 @@ class AuthViewModel @Inject constructor(
 
             sessionManager.removeSession()
             _accountID.postValue(null)
+            _startDate.postValue(null)
 
             tokenManager.removeToken()
             _token.postValue(null)
@@ -105,13 +115,21 @@ class AuthViewModel @Inject constructor(
             }
 
             var userAccount = tinkoffRepository.getUserAccounts().accounts.firstOrNull()
+            var candles = tinkoffRepository.getCandles("BBG005DXJS36").candles.firstOrNull()
+
             if (userAccount == null) {
                 val response = tinkoffRepository.registerAccount()
                 userAccount = UserAccountsResponse.Account(response.brokerAccountType, response.brokerAccountId)
             }
+            var figi = candles!!.figi
+            if (candles == null) {
+                figi = "BBG005DXJS36"
 
-            sessionManager.createSession(userAccount.brokerAccountId)
+            }
+
+            sessionManager.createSession(userAccount.brokerAccountId, figi)
             _accountID.postValue(userAccount.brokerAccountId)
+            _startDate.postValue(candles.time)
 
             _buttonText.postValue(context.getString(R.string.logout))
 
