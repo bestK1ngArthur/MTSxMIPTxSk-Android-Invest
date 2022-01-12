@@ -49,7 +49,7 @@ class PortfolioViewModel @Inject constructor(
         }
 
         Log.d("Admin", "Here");
-        //getListItem()
+        getListItem()
     }
 
     private fun getListItem() {

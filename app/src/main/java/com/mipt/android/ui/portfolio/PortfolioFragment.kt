@@ -11,7 +11,9 @@ import com.mipt.android.R
 import com.mipt.android.databinding.PortfolioFragmentBinding
 import com.mipt.android.tools.navigate
 import com.mipt.android.ui.auth.AuthFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
     private val viewBinding by viewBinding(PortfolioFragmentBinding::bind)
     private val viewModel by viewModels<PortfolioViewModel>()
@@ -29,7 +31,7 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
 //                toast.show()
 //            })
 
-            //viewModel.getListItem()
+            viewModel.getListItem()
         }
 
 
