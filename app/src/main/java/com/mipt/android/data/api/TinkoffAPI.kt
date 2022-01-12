@@ -2,6 +2,7 @@ package com.mipt.android.data.api
 
 import com.mipt.android.data.api.requests.*
 import com.mipt.android.data.api.responses.*
+import com.mipt.android.data.api.responses.portfolio.APIResultPortfolio
 
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -25,4 +26,7 @@ interface TinkoffAPI {
 
     @GET("$URL_PREFIX/user/accounts")
     suspend fun getUserAccounts() : APIResult<UserAccountsResponse>
+
+    @GET("$URL_PREFIX/portfolio")
+    suspend fun getPortfolio(brokerAccountId: String?): APIResultPortfolio
 }

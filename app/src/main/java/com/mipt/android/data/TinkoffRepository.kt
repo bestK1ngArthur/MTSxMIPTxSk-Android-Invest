@@ -7,4 +7,5 @@ interface TinkoffRepository {
     suspend fun registerAccount(): RegisterResponse
     suspend fun removeAccount(brokerAccountId: String)
     suspend fun getUserAccounts(): UserAccountsResponse
+    suspend fun getPortfolio(brokerAccountId: String?)
 }
