@@ -1,5 +1,6 @@
 package com.mipt.android.data
 
+import android.util.Log
 import com.mipt.android.data.api.TinkoffAPI
 import com.mipt.android.data.api.requests.RegisterRequest
 import com.mipt.android.data.api.responses.RegisterResponse
@@ -15,15 +16,26 @@ class TinkoffRepositoryImpl @Inject constructor(
 ): TinkoffRepository {
     override suspend fun registerAccount(): RegisterResponse {
         val result = api.register(RegisterRequest("Tinkoff"))
+<<<<<<< HEAD
         return result.response ?: throw TinkoffRepositoryException("Response is null")
+=======
+        val jsonData = Json.encodeToString(result.data)
+        return Json.decodeFromString<RegisterResponse>(jsonData)
+>>>>>>> origin/feature/portfolio
     }
 
     override suspend fun removeAccount(brokerAccountId: String) {
         api.remove(brokerAccountId)
     }
 
+<<<<<<< HEAD
     override suspend fun getUserAccounts(): UserAccountsResponse {
         val result = api.getUserAccounts()
         return result.response ?: throw TinkoffRepositoryException("Response is null")
+=======
+    override suspend fun getPortfolio(brokerAccountId: String?) {
+        val result = api.getPortfolio(brokerAccountId)
+        Log.d("Admin", result.toString());
+>>>>>>> origin/feature/portfolio
     }
 }
