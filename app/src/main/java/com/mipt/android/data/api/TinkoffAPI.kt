@@ -4,6 +4,7 @@ import com.mipt.android.data.api.requests.*
 import com.mipt.android.data.api.responses.*
 
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -15,10 +16,13 @@ interface TinkoffAPI {
     @POST("$URL_PREFIX/sandbox/register")
     suspend fun register(
         @Body request: RegisterRequest
-    ) : APIResult
+    ) : APIResult<RegisterResponse>
 
     @POST("$URL_PREFIX/sandbox/remove")
     suspend fun remove(
         @Query("brokerAccountId") brokerAccountId: String
-    ) : APIResult
+    ) : APIResult<VoidResponse>
+
+    @GET("$URL_PREFIX/user/accounts")
+    suspend fun getUserAccounts() : APIResult<UserAccountsResponse>
 }

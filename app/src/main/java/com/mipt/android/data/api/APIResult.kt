@@ -1,11 +1,11 @@
-package com.mipt.android.data.api.responses
+package com.mipt.android.data.api
 
 import kotlinx.serialization.*
 
 @Serializable
-data class APIResult(
+data class APIResult<APIResponse>(
     val trackingId: String,
     val status: String,
     @SerialName("payload")
-    val data: Map<String, String>
+    val response: APIResponse?
 )

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.preferences.TokenManager
 import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
@@ -71,7 +72,8 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launchWithErrorHandler(block = {
             _isLoading.postValue(true)
 
-            tinkoffRepository.removeAccount(sessionManager.getBrokerAccountId() ?: "")
+            // If need remove account on logout
+            // tinkoffRepository.removeAccount(sessionManager.getBrokerAccountId() ?: "")
 
             sessionManager.removeSession()
             _accountID.postValue(null)
@@ -102,10 +104,14 @@ class AuthViewModel @Inject constructor(
                 tokenManager.saveToken(tokenValue)
             }
 
-            val response = tinkoffRepository.registerAccount()
+            var userAccount = tinkoffRepository.getUserAccounts().accounts.firstOrNull()
+            if (userAccount == null) {
+                val response = tinkoffRepository.registerAccount()
+                userAccount = UserAccountsResponse.Account(response.brokerAccountType, response.brokerAccountId)
+            }
 
-            sessionManager.createSession(response.brokerAccountId)
-            _accountID.postValue(response.brokerAccountId)
+            sessionManager.createSession(userAccount.brokerAccountId)
+            _accountID.postValue(userAccount.brokerAccountId)
 
             _buttonText.postValue(context.getString(R.string.logout))
 
@@ -116,7 +122,6 @@ class AuthViewModel @Inject constructor(
             showToast("Неверный API токен")
         })
     }
-
 
     private fun isValidToken(token: String?): Boolean {
         return (token != null) && (token.length >= 20)
