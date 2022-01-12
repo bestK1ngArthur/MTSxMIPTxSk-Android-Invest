@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
 import com.mipt.android.databinding.PortfolioFragmentBinding
+import com.mipt.android.tools.navigate
 import com.mipt.android.ui.auth.AuthFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,10 +23,17 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
             profileButton.setOnClickListener {
                 showAuth()
             }
+            detailsButton.setOnClickListener {
+                showDetails()
+            }
         }
     }
 
     private fun showAuth() {
-        parentFragmentManager.navigate(PortfolioFragment(), true)
+        parentFragmentManager.navigate(AuthFragment(), true)
+    }
+
+    private fun showDetails(){
+        parentFragmentManager.navigate(DetailsFragment(), true)
     }
 }

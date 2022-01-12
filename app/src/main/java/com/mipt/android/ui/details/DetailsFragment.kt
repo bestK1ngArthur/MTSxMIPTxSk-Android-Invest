@@ -8,7 +8,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
-import com.mipt.android.ui.auth.AuthFragment
+import com.mipt.android.ui.portfolio.PortfolioFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +27,6 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     }
 
     private fun showAuth() {
-        parentFragmentManager.navigate(AuthFragment(), true)
+        parentFragmentManager.navigate(PortfolioFragment(), true)
     }
 }
