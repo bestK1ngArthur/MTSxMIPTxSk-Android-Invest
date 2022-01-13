@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class StockInfoResponse(
     val figi: String,
     val ticker: String,
-    val isin: String,
+    val isin: String = "",
     val minPriceIncrement: Float,
     val lot: Int,
     val currency: String,

@@ -1,2 +1,2 @@
 # MTSxMIPTxSk-Android-Invest
-📈 Simple screener app based on Tinkoff Open API
+📈 Simple portfolio view app based on Tinkoff Open API

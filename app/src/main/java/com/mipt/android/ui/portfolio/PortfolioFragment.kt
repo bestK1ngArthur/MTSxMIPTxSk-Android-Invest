@@ -15,59 +15,9 @@ import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 import com.mipt.android.databinding.PortfolioFragmentBinding
 import com.mipt.android.tools.navigate
 import com.mipt.android.ui.auth.AuthFragment
+import com.mipt.android.ui.details.Figi
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-
-
-class HistoryItemAdapter(private val context: Context,
-                         private val dataSource: List<PortfolioResponse.PositionItem>) : BaseAdapter() {
-
-    private val objectList: LayoutInflater =
-        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
-    override fun getCount(): Int {
-        return dataSource.size
-    }
-
-    override fun getItem(position: Int): Any {
-        return dataSource[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    @SuppressLint("ViewHolder", "SimpleDateFormat")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val rowView = objectList.inflate(R.layout.portfolio_item_fragment, parent, false)
-
-        val titleTextView = rowView.findViewById<TextView>(R.id.title)
-
-        val balanceTextView = rowView.findViewById<TextView>(R.id.balance)
-
-        val lotsTextview = rowView.findViewById<TextView>(R.id.lots)
-
-        val photo = rowView.findViewById<ImageView>(R.id.imageView)
-
-        val recipe = getItem(position) as PortfolioResponse.PositionItem
-
-        titleTextView.text = recipe.name
-        balanceTextView.text = recipe.balance.toBigDecimal().toPlainString()
-        lotsTextview.text = recipe.lots
-
-        if (recipe.instrumentType == "Currency") {
-            photo.setImageResource(R.drawable.icon_money)
-        } else if (recipe.instrumentType == "Stonks") {
-            photo.setImageResource(R.drawable.stonks_icon)
-        }
-
-        rowView.setOnClickListener {
-            val figi = recipe.figi;
-            // переход по акции
-        }
-        return rowView
-    }
-}
 
 @AndroidEntryPoint
 class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
@@ -81,9 +31,6 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
             profileButton.setOnClickListener {
                 showAuth()
             }
-            detailsButton.setOnClickListener {
-                showDetails()
-            }
 
             viewModel.toast.observe(viewLifecycleOwner, { error ->
                 val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
@@ -92,7 +39,7 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
 
             viewModel.result.observe(viewLifecycleOwner, { array ->
                 val listView: ListView = listPortfoli
-                val adapter = activity?.let { HistoryItemAdapter(it, array) }
+                val adapter = activity?.let { it -> HistoryItemAdapter(it, array) { figi -> showDetails(figi) } }
                 listView.adapter = adapter
             })
 
@@ -103,7 +50,9 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
         parentFragmentManager.navigate(AuthFragment(), true)
     }
 
-    private fun showDetails(){
-        parentFragmentManager.navigate(DetailsFragment(), true)
+    private fun showDetails(figi: String) {
+        parentFragmentManager.navigate(
+            DetailsFragment.newInstance(Figi(figi))
+        )
     }
 }
