@@ -8,13 +8,22 @@ import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.launchWithErrorHandler
+import com.mipt.android.ui.details.Figi
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class DetailsViewModel @Inject constructor(
+class DetailsViewModel @AssistedInject constructor(
+    @Assisted private val figi: Figi,
     private val tinkoffRepository: TinkoffRepository,
 ) : ViewModel() {
+    @AssistedFactory
+    interface Factory {
+        fun create(figi: Figi): DetailsViewModel
+    }
+
     val stockName: LiveData<String?>
         get() = _stockName
     private var _stockName = MutableLiveData<String?>()
@@ -25,10 +34,8 @@ class DetailsViewModel @Inject constructor(
 
     fun getStockInfo(){
         viewModelScope.launchWithErrorHandler(block = {
-            var figi = "BBG005DXJS36"
-            var stockName = tinkoffRepository.getStockInfo(figi).name
+            var stockName = tinkoffRepository.getStockInfo(figi.id).name
             _stockName.postValue(stockName)
-
         }, onError = {
             showToast("Неверные фиги")
         })
