@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mipt.android.common.SingleLiveEvent
 import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.data.api.responses.StockInfoResponse
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
@@ -31,10 +33,15 @@ class PortfolioViewModel @Inject constructor(
         get() = _result
     private val _result = MutableLiveData<List<PortfolioResponse.PositionItem>>()
 
+    private val _openDetailAction = SingleLiveEvent<PortfolioResponse.PositionItem>()
+    val openDetailAction: LiveData<PortfolioResponse.PositionItem> = _openDetailAction
+
     init {
         viewModelScope.launchWithErrorHandler(block = {
             val accountID = sessionManager.getBrokerAccountId();
+
             val result = tinkoffRepository.getPortfolio(accountID);
+
             _result.postValue(result.positions);
         }, onError = {
             showToast("Неверный API токен")
@@ -43,6 +50,11 @@ class PortfolioViewModel @Inject constructor(
 
     private fun showToast(message: String) {
         _toast.postValue(message)
+    }
+
+    fun onItemClicked(item: PortfolioResponse.PositionItem) {
+        _openDetailAction.value = item
+
     }
 
 
