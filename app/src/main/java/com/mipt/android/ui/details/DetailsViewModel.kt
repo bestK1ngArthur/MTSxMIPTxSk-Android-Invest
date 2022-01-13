@@ -104,7 +104,7 @@ class DetailsViewModel @AssistedInject constructor(
         val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val formatter = SimpleDateFormat("dd.MM.yyyy")
         val candleData = CandleData(candleArray.map{formatter.format(parser.parse(it.time))}, candleDataset)
-        _candleStickImg.data = candleData
+//        _candleStickImg.data = candleData
 
         return candleData
     }
