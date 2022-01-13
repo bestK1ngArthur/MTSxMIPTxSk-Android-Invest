@@ -48,7 +48,7 @@ class HistoryItemAdapter(
 
         if (recipe.instrumentType == "Currency") {
             photo.setImageResource(R.drawable.icon_money)
-        } else if (recipe.instrumentType == "Stonks") {
+        } else {
             photo.setImageResource(R.drawable.stonks_icon)
         }
 
