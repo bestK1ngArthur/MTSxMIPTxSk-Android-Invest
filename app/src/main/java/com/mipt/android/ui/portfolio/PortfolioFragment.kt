@@ -62,6 +62,7 @@ class HistoryItemAdapter(private val context: Context,
         }
 
         rowView.setOnClickListener {
+            val figi = recipe.figi;
             // переход по акции
         }
         return rowView
