@@ -44,6 +44,10 @@ class DetailsViewModel @AssistedInject constructor(
             get() = _candleStickChart
     private var _candleStickChart = MutableLiveData<CandleData?>()
 
+    val xLabels: LiveData<List<String?>>
+        get() = _xLabels
+    private var _xLabels = MutableLiveData<List<String?>>()
+
     val toast: LiveData<String?>
         get() = _toast
     private val _toast = MutableLiveData<String?>()
@@ -54,8 +58,10 @@ class DetailsViewModel @AssistedInject constructor(
             var candleArray = tinkoffRepository.getCandles(figi.id).candles
             val candleData = getCandlesData(candleArray)
             _candleStickChart.postValue(candleData)
-            val xvalues = candleArray.map{it.time}
-            Log.d("time", xvalues.toString())
+//            val xvalues = candleArray.map{it.time}
+            val xLabels = candleArray.map{it.time}
+            _xLabels.postValue(xLabels)
+//            Log.d("time", xvalues.toString())
 
         }, onError = {
             showToast("Неверные фиги")
@@ -78,7 +84,7 @@ class DetailsViewModel @AssistedInject constructor(
         val xvalue = ArrayList<String>()
         val candleStickEntry = ArrayList<CandleEntry>()
 
-        var value = 0F
+        var value = 0
         for (candle in candleArray) {
             xvalue.add(candle.time)
             candleStickEntry.add(CandleEntry(value, candle.h.toFloat(),
@@ -97,7 +103,8 @@ class DetailsViewModel @AssistedInject constructor(
         candleDataset.decreasingPaintStyle = Paint.Style.FILL
         candleDataset.increasingColor = green
         candleDataset.increasingPaintStyle = Paint.Style.FILL
-        val candleData = CandleData(candleDataset)
+        val candleData = CandleData(candleArray.map{it.time}, candleDataset)
+
         return candleData
     }
 
