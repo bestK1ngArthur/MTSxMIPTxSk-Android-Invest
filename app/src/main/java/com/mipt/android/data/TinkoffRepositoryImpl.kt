@@ -6,9 +6,7 @@ import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.RegisterResponse
 import com.mipt.android.data.api.responses.StockInfoResponse
 import com.mipt.android.data.api.responses.UserAccountsResponse
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 
 import javax.inject.Inject
 
@@ -38,8 +36,15 @@ class TinkoffRepositoryImpl @Inject constructor(
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
 
+
     override suspend fun getStockInfo(figi: String): StockInfoResponse {
         val result = api.getStockInfo(figi)
+        return result.response ?: throw TinkoffRepositoryException("Response is null")
+    }
+
+    override suspend fun getPortfolio(brokerAccountId: String?): PortfolioResponse {
+        val result = api.getPortfolio(brokerAccountId)
+
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
 }

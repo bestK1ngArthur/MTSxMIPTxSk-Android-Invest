@@ -124,7 +124,6 @@ class AuthViewModel @Inject constructor(
             var figi = candles!!.figi
             if (candles == null) {
                 figi = "BBG005DXJS36"
-
             }
 
             sessionManager.createSession(userAccount.brokerAccountId, figi)
