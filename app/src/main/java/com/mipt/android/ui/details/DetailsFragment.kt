@@ -50,11 +50,15 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
             }
 
             viewModel.candleStickChart.observe(viewLifecycleOwner, { candleStickChart ->
+//                candleStickChartImg.data = candleStickChart
+//                candleStickChartImg.invalidate()
                 if (candleStickChart != null) {
                     candleStickChartImg.data = candleStickChart
+
                 } else {
                     candleStickChartImg.data = null
                 }
+                candleStickChartImg.invalidate()
             })
 
             viewModel.stockName.observe(viewLifecycleOwner, { stockName ->
