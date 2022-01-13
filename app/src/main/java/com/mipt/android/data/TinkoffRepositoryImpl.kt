@@ -29,9 +29,9 @@ class TinkoffRepositoryImpl @Inject constructor(
 
     override suspend fun getCandles(figi: String): CandlesResponse {
         val figi = "BBG005DXJS36"
-        val startDate = "2020-08-19T18:38:33+03:00"
-        val endDate = "2021-08-19T18:38:33+03:00"
-        val interval = "day"
+        val startDate = "2021-06-13T18:38:33+03:00"
+        val endDate = "2022-01-13T18:38:33+03:00"
+        val interval = "month"
         val result = api.getCandles(figi, startDate, endDate, interval)
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }

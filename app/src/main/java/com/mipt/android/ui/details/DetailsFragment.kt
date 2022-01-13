@@ -42,7 +42,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getStockInfo()
-        viewModel.setCandleStickChart()
+        viewModel.getCandleArray()
 
         with(viewBinding) {
             backButton.setOnClickListener {
@@ -59,8 +59,9 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
 
             viewModel.candleStickChart.observe(viewLifecycleOwner, { candleStickChart ->
                 if (candleStickChart != null) {
-
+                    candleStickChartImg.data = candleStickChart
                 } else {
+                    candleStickChartImg.data = null
                 }
             })
 
