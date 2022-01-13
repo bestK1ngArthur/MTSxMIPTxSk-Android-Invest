@@ -36,4 +36,8 @@ interface TinkoffAPI {
     suspend fun getPortfolio(
         @Query("brokerAccountId") brokerAccountId: String?
     ): APIResult<PortfolioResponse>
+
+    @GET("$URL_PREFIX/market/search/by-figi")
+    suspend fun getStockInfo(@Query("figi") figi: String
+    ): APIResult<StockInfoResponse>
 }
