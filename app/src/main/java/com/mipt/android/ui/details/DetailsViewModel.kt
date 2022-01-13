@@ -2,6 +2,7 @@ package com.mipt.android.ui.portfolio
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.icu.text.SimpleDateFormat
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,9 +45,9 @@ class DetailsViewModel @AssistedInject constructor(
             get() = _candleStickChart
     private var _candleStickChart = MutableLiveData<CandleData?>()
 
-    val xLabels: LiveData<List<String?>>
-        get() = _xLabels
-    private var _xLabels = MutableLiveData<List<String?>>()
+    val candleStickImg: LiveData<CandleStickChart?>
+        get() = _candleStickImage
+    private var _candleStickImage = MutableLiveData<CandleStickChart?>()
 
     val toast: LiveData<String?>
         get() = _toast
@@ -58,10 +59,7 @@ class DetailsViewModel @AssistedInject constructor(
             var candleArray = tinkoffRepository.getCandles(figi.id).candles
             val candleData = getCandlesData(candleArray)
             _candleStickChart.postValue(candleData)
-//            val xvalues = candleArray.map{it.time}
-            val xLabels = candleArray.map{it.time}
-            _xLabels.postValue(xLabels)
-//            Log.d("time", xvalues.toString())
+
 
         }, onError = {
             showToast("Неверные фиги")
@@ -103,7 +101,10 @@ class DetailsViewModel @AssistedInject constructor(
         candleDataset.decreasingPaintStyle = Paint.Style.FILL
         candleDataset.increasingColor = green
         candleDataset.increasingPaintStyle = Paint.Style.FILL
-        val candleData = CandleData(candleArray.map{it.time}, candleDataset)
+        val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val formatter = SimpleDateFormat("dd.MM.yyyy")
+        val candleData = CandleData(candleArray.map{formatter.format(parser.parse(it.time))}, candleDataset)
+        _candleStickImg.data = candleData
 
         return candleData
     }
