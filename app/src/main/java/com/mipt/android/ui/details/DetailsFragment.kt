@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.github.mikephil.charting.data.CandleDataSet
+import com.github.mikephil.charting.data.CandleEntry
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
@@ -19,6 +21,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getStockInfo()
+        viewModel.setCandleStickChart()
 
         with(viewBinding) {
             backButton.setOnClickListener {
@@ -32,8 +35,18 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 }
             })
 
+            viewModel.candleStickChart.observe(viewLifecycleOwner, { candleStickChart ->
+                if (candleStickChart != null) {
+
+                } else {
+                }
+            })
+
+
         }
     }
+
+
 
     private fun showDetails() {
         parentFragmentManager.navigate(PortfolioFragment(), true)
