@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
+import com.mipt.android.data.api.responses.CandlesResponse
+import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.preferences.TokenManager
 import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
@@ -24,7 +26,11 @@ class AuthViewModel @Inject constructor(
 
     val accountID: LiveData<String?>
         get() = _accountID
-    private val _accountID = MutableLiveData<String?>()
+    private var _accountID = MutableLiveData<String?>()
+
+    val startDate: LiveData<String?>
+        get() = _startDate
+    private var _startDate = MutableLiveData<String?>()
 
     val buttonText: LiveData<String>
         get() = _buttonText
@@ -42,13 +48,16 @@ class AuthViewModel @Inject constructor(
         get() = _isPortfolioShown
     private val _isPortfolioShown = MutableLiveData<Boolean>()
 
+    val isCloseButtonShown: LiveData<Boolean>
+        get() = accountID.map { it != null }
+
     init {
         _token.postValue(tokenManager.getToken())
+        _accountID.postValue(sessionManager.getBrokerAccountId())
+        _startDate.postValue(sessionManager.getCandles())
+        print("WHERHEHRHE")
+        print(_accountID)
 
-        val accountIDValue = sessionManager.getBrokerAccountId()
-        if (accountIDValue != null) {
-            _accountID.postValue(accountIDValue)
-        }
 
         if (tokenManager.getToken() != null && sessionManager.isSessionExists()) {
             _buttonText.postValue(context.getString(R.string.logout))
@@ -72,10 +81,12 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launchWithErrorHandler(block = {
             _isLoading.postValue(true)
 
-            tinkoffRepository.removeAccount(sessionManager.getBrokerAccountId() ?: "")
+            // If need remove account on logout
+            // tinkoffRepository.removeAccount(sessionManager.getBrokerAccountId() ?: "")
 
             sessionManager.removeSession()
             _accountID.postValue(null)
+            _startDate.postValue(null)
 
             tokenManager.removeToken()
             _token.postValue(null)
@@ -103,10 +114,21 @@ class AuthViewModel @Inject constructor(
                 tokenManager.saveToken(tokenValue)
             }
 
-            val response = tinkoffRepository.registerAccount()
+            var userAccount = tinkoffRepository.getUserAccounts().accounts.firstOrNull()
+            var candles = tinkoffRepository.getCandles("BBG005DXJS36").candles.firstOrNull()
 
-            sessionManager.createSession(response.brokerAccountId)
-            _accountID.postValue(response.brokerAccountId)
+            if (userAccount == null) {
+                val response = tinkoffRepository.registerAccount()
+                userAccount = UserAccountsResponse.Account(response.brokerAccountType, response.brokerAccountId)
+            }
+            var figi = candles!!.figi
+            if (candles == null) {
+                figi = "BBG005DXJS36"
+            }
+
+            sessionManager.createSession(userAccount.brokerAccountId, figi)
+            _accountID.postValue(userAccount.brokerAccountId)
+            _startDate.postValue(candles.time)
 
             _buttonText.postValue(context.getString(R.string.logout))
 
@@ -117,7 +139,6 @@ class AuthViewModel @Inject constructor(
             showToast("Неверный API токен")
         })
     }
-
 
     private fun isValidToken(token: String?): Boolean {
         return (token != null) && (token.length >= 20)
