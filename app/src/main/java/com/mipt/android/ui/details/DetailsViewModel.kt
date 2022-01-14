@@ -29,6 +29,11 @@ import com.github.mikephil.charting.charts.CandleStickChart
 import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DetailsViewModel @AssistedInject constructor(
@@ -65,21 +70,25 @@ class DetailsViewModel @AssistedInject constructor(
         get() = _toast
     private val _toast = MutableLiveData<String?>()
 
+    val fromDate: LiveData<Date>
+        get() = _fromDate
+    private val _fromDate = MutableLiveData<Date>()
 
-    fun getCandleArray(interval: String="month"){
-        viewModelScope.launchWithErrorHandler(block = {
-            var candleArray = tinkoffRepository.getCandles(figi.id, interval).candles
-            val lastPrice = candleArray.last().c
-            val candleData = getCandlesData(candleArray)
-            _candleStickChart.postValue(candleData)
-            _lastPrice.postValue("$lastPrice")
+    val toDate: LiveData<Date>
+        get() = _toDate
+    private val _toDate = MutableLiveData<Date>()
 
-
-        }, onError = {
-            showToast("Неверные фиги")
-        })
+    init {
+        _fromDate.postValue(Date.from(Instant.now().minus(365, ChronoUnit.DAYS)))
+        _toDate.postValue(Date.from(Instant.now()))
     }
 
+    fun getCandleArray(interval: String="month") {
+        val startDate = fromDate.value ?: Date.from(Instant.now().minus(365, ChronoUnit.DAYS))
+        val endDate = toDate.value ?: Date.from(Instant.now())
+
+        getCandleArray(interval, startInstant = startDate.toInstant(), endInstant = endDate.toInstant())
+    }
 
     fun getStockInfo(){
         viewModelScope.launchWithErrorHandler(block = {
@@ -92,7 +101,6 @@ class DetailsViewModel @AssistedInject constructor(
             showToast("Неверные фиги")
         })
     }
-
 
     fun getCandlesData(candleArray: List<CandlesResponse.Candle>): CandleData {
         val candleSize = candleArray.size
@@ -126,7 +134,32 @@ class DetailsViewModel @AssistedInject constructor(
         return candleData
     }
 
+    fun setFromDate(date: Date) {
+        _fromDate.postValue(date)
 
+        getCandleArray()
+    }
+
+    fun setToDate(date: Date) {
+        _toDate.postValue(date)
+
+        getCandleArray()
+    }
+
+    private fun getCandleArray(interval: String="month", startInstant: Instant, endInstant: Instant) {
+        viewModelScope.launchWithErrorHandler(block = {
+            val startDate = DateTimeFormatter.ISO_INSTANT.format(startInstant)
+            val endDate = DateTimeFormatter.ISO_INSTANT.format(endInstant)
+
+            var candleArray = tinkoffRepository.getCandles(figi.id, interval, startDate, endDate).candles
+            val lastPrice = candleArray.last().c
+            val candleData = getCandlesData(candleArray)
+            _candleStickChart.postValue(candleData)
+            _lastPrice.postValue("$lastPrice")
+        }, onError = {
+            showToast("Неверные фиги")
+        })
+    }
 
     private fun showToast(message: String) {
         _toast.postValue(message)
