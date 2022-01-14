@@ -1,5 +1,6 @@
 package com.mipt.android.data
 
+import android.icu.text.SimpleDateFormat
 import com.mipt.android.data.api.TinkoffAPI
 import com.mipt.android.data.api.requests.RegisterRequest
 import com.mipt.android.data.api.responses.CandlesResponse
@@ -7,6 +8,10 @@ import com.mipt.android.data.api.responses.RegisterResponse
 import com.mipt.android.data.api.responses.StockInfoResponse
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_INSTANT
+import java.time.temporal.ChronoUnit
 
 import javax.inject.Inject
 
@@ -27,11 +32,9 @@ class TinkoffRepositoryImpl @Inject constructor(
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
 
-    override suspend fun getCandles(figi: String): CandlesResponse {
-        val figi = "BBG005DXJS36"
-        val startDate = "2020-08-19T18:38:33+03:00"
-        val endDate = "2021-08-19T18:38:33+03:00"
-        val interval = "day"
+    override suspend fun getCandles(figi: String, interval: String): CandlesResponse {
+        val endDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+        val startDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now().minus(365, ChronoUnit.DAYS))
         val result = api.getCandles(figi, startDate, endDate, interval)
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }

@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.github.mikephil.charting.data.CandleDataSet
+import com.github.mikephil.charting.data.CandleEntry
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
@@ -39,12 +41,37 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getCandleArray("month")
         viewModel.getStockInfo()
 
         with(viewBinding) {
             backButton.setOnClickListener {
                 showDetails()
             }
+
+            day.setOnClickListener {
+                viewModel.getCandleArray("day")
+            }
+
+            week.setOnClickListener {
+                viewModel.getCandleArray("week")
+            }
+
+            month.setOnClickListener {
+                viewModel.getCandleArray("month")
+            }
+
+            viewModel.candleStickChart.observe(viewLifecycleOwner, { candleStickChart ->
+
+                if (candleStickChart != null) {
+                    candleStickChartImg.data = candleStickChart
+
+                } else {
+                    candleStickChartImg.data = null
+                }
+                candleStickChartImg.setDescription("Свечи")
+                candleStickChartImg.invalidate()
+            })
 
             viewModel.stockName.observe(viewLifecycleOwner, { stockName ->
                 if (stockName != null) {
@@ -54,8 +81,27 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 }
             })
 
+            viewModel.stockCurrency.observe(viewLifecycleOwner, { stockCurrency ->
+                if (stockCurrency != null) {
+                    currencyTextView.text = "Валюта: $stockCurrency"
+                } else {
+                    currencyTextView.text = null
+                }
+            })
+
+            viewModel.lastPrice.observe(viewLifecycleOwner, { lastPrice ->
+                if (lastPrice != null) {
+                    lastPriceTextView.text = "Последняя цена: $lastPrice"
+                } else {
+                    lastPriceTextView.text = null
+                }
+            })
+
+
         }
     }
+
+
 
     private fun showDetails() {
         parentFragmentManager.navigate(PortfolioFragment(), true)

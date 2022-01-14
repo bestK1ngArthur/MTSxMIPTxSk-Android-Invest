@@ -8,11 +8,11 @@ data class CandlesResponse(
 ) {
     @Serializable
     data class Candle(
-        val o: Float,
-        val c: Float,
-        val h: Float,
-        val l: Float,
-        val v: Int,
+        val o: Double,
+        val c: Double,
+        val h: Double,
+        val l: Double,
+        val v: Double,
         val time: String,
         val interval: String,
         val figi: String

@@ -10,7 +10,7 @@ interface TinkoffRepository {
     suspend fun registerAccount(): RegisterResponse
     suspend fun removeAccount(brokerAccountId: String)
     suspend fun getUserAccounts(): UserAccountsResponse
-    suspend fun getCandles(figi: String): CandlesResponse
+    suspend fun getCandles(figi: String, interval: String): CandlesResponse
     suspend fun getPortfolio(brokerAccountId: String?): PortfolioResponse
     suspend fun getStockInfo(figi: String): StockInfoResponse
 
