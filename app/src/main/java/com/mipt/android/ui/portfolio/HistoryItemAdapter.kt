@@ -9,7 +9,11 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.mipt.android.R
+import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class HistoryItemAdapter(
     private val context: Context,
@@ -32,7 +36,7 @@ class HistoryItemAdapter(
         return position.toLong()
     }
 
-    @SuppressLint("ViewHolder", "SimpleDateFormat")
+    @SuppressLint("ViewHolder", "SimpleDateFormat", "SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rowView = objectList.inflate(R.layout.portfolio_item_fragment, parent, false)
 
@@ -40,11 +44,14 @@ class HistoryItemAdapter(
         val balanceTextView = rowView.findViewById<TextView>(R.id.balance)
         val lotsTextview = rowView.findViewById<TextView>(R.id.lots)
         val photo = rowView.findViewById<ImageView>(R.id.imageView)
-        val recipe = getItem(position) as PortfolioResponse.PositionItem
+        val price_ = rowView.findViewById<TextView>(R.id.price)
 
+        val recipe = getItem(position) as PortfolioResponse.PositionItem
+//        val lastPrice = getLastPrice(recipe.figi)
         titleTextView.text = recipe.name
-        balanceTextView.text = recipe.balance.toBigDecimal().toPlainString()
-        lotsTextview.text = recipe.lots
+        balanceTextView.text = recipe.ticker //recipe.price.toString(); /* recipe.balance.toBigDecimal().toPlainString() */
+        lotsTextview.text = recipe.balance.toBigDecimal().toPlainString() + " шт. "
+        price_.text = recipe.blocked;
 
         if (recipe.instrumentType == "Currency") {
             photo.setImageResource(R.drawable.icon_money)

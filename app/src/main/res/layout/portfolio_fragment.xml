@@ -14,7 +14,9 @@
         android:layout_marginTop="20dp"
         android:text="@string/portfolio"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="20sp"
+        android:textColor="@color/iDarkGray"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,8 +48,9 @@
     <ListView
         android:id="@+id/listPortfoli"
         android:layout_width="409dp"
-        android:layout_height="665dp"
-        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="1dp" />
 

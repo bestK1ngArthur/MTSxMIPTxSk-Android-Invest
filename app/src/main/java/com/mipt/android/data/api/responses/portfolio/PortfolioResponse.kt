@@ -12,6 +12,8 @@ data class PortfolioResponse (
         val instrumentType: String,
         val lots: String,
         val name: String,
-        val balance: String
+        val balance: String,
+        var ticker: String,
+        var blocked: String,
     )
 }

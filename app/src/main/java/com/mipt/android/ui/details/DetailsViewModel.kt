@@ -1,9 +1,17 @@
 package com.mipt.android.ui.details
 
+import android.graphics.Color
+import android.graphics.Paint
+import android.icu.text.SimpleDateFormat
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.mikephil.charting.data.CandleData
+import com.github.mikephil.charting.data.CandleDataSet
+import com.github.mikephil.charting.data.CandleEntry
+import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.launchWithErrorHandler
@@ -13,6 +21,12 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+//import android.R
+
+import com.github.mikephil.charting.charts.CandleStickChart
+import com.mipt.android.data.api.responses.CandlesResponse
+import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
+
 
 class DetailsViewModel @AssistedInject constructor(
     @Assisted private val figi: Figi,
@@ -27,18 +41,89 @@ class DetailsViewModel @AssistedInject constructor(
         get() = _stockName
     private var _stockName = MutableLiveData<String?>()
 
+    val stockCurrency: LiveData<String?>
+        get() = _stockCurrency
+    private var _stockCurrency = MutableLiveData<String?>()
+
+    val lastPrice: LiveData<String?>
+        get() = _lastPrice
+    private var _lastPrice = MutableLiveData<String?>()
+
+    val candleStickChart: LiveData<CandleData?>
+            get() = _candleStickChart
+    private var _candleStickChart = MutableLiveData<CandleData?>()
+
+    val candleStickImg: LiveData<CandleStickChart?>
+        get() = _candleStickImage
+    private var _candleStickImage = MutableLiveData<CandleStickChart?>()
+
     val toast: LiveData<String?>
         get() = _toast
     private val _toast = MutableLiveData<String?>()
 
-    fun getStockInfo(){
+
+    fun getCandleArray(interval: String="month"){
         viewModelScope.launchWithErrorHandler(block = {
-            var stockName = tinkoffRepository.getStockInfo(figi.id).name
-            _stockName.postValue(stockName)
+            var candleArray = tinkoffRepository.getCandles(figi.id, interval).candles
+            val lastPrice = candleArray.last().c
+            val candleData = getCandlesData(candleArray)
+            _candleStickChart.postValue(candleData)
+            _lastPrice.postValue("$lastPrice")
+
+
         }, onError = {
             showToast("Неверные фиги")
         })
     }
+
+
+    fun getStockInfo(){
+        viewModelScope.launchWithErrorHandler(block = {
+            val stock = tinkoffRepository.getStockInfo(figi.id)
+            var stockName = stock.name
+            val stockCurrency = stock.currency
+            _stockName.postValue(stockName)
+            _stockCurrency.postValue(stockCurrency)
+        }, onError = {
+            showToast("Неверные фиги")
+        })
+    }
+
+
+    fun getCandlesData(candleArray: List<CandlesResponse.Candle>): CandleData {
+        val candleSize = candleArray.size
+        val xvalue = ArrayList<String>()
+        val candleStickEntry = ArrayList<CandleEntry>()
+
+        var value = 0
+        for (candle in candleArray) {
+            xvalue.add(candle.time)
+            candleStickEntry.add(CandleEntry(value, candle.h.toFloat(),
+                candle.l.toFloat(), candle.o.toFloat(), candle.c.toFloat()
+            ))
+            value += 1
+        }
+        val candleDataset = CandleDataSet(candleStickEntry, candleArray[0].interval)
+
+        candleDataset.color = Color.rgb(80, 80, 80)
+        val red = Color.rgb(255, 0,0)
+        val green = Color.rgb(0, 255,0)
+        candleDataset.shadowColor = green
+        candleDataset.shadowWidth = 1f
+        candleDataset.decreasingColor = red
+        candleDataset.decreasingPaintStyle = Paint.Style.FILL
+        candleDataset.increasingColor = green
+        candleDataset.increasingPaintStyle = Paint.Style.FILL
+        val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val formatter = SimpleDateFormat("dd.MM.yyyy")
+        val candleData = CandleData(candleArray.map{formatter.format(parser.parse(it.time))}, candleDataset)
+//        _candleStickImg.data = candleData
+
+        return candleData
+    }
+
+
+
     private fun showToast(message: String) {
         _toast.postValue(message)
     }
