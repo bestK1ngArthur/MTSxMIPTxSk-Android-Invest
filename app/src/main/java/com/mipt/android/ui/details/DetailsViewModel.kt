@@ -1,9 +1,11 @@
 package com.mipt.android.ui.details
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.icu.text.SimpleDateFormat
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,11 +28,13 @@ import javax.inject.Inject
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 class DetailsViewModel @AssistedInject constructor(
     @Assisted private val figi: Figi,
     private val tinkoffRepository: TinkoffRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
@@ -106,8 +110,8 @@ class DetailsViewModel @AssistedInject constructor(
         val candleDataset = CandleDataSet(candleStickEntry, candleArray[0].interval)
 
         candleDataset.color = Color.rgb(80, 80, 80)
-        val red = Color.rgb(255, 0,0)
-        val green = Color.rgb(0, 255,0)
+        val red = ContextCompat.getColor(context, R.color.iRed)
+        val green = ContextCompat.getColor(context, R.color.iGreen)
         candleDataset.shadowColor = green
         candleDataset.shadowWidth = 1f
         candleDataset.decreasingColor = red

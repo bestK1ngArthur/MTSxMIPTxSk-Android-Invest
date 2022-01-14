@@ -95,12 +95,8 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                     lastPriceTextView.text = null
                 }
             })
-
-
         }
     }
-
-
 
     private fun showDetails() {
         parentFragmentManager.navigate(PortfolioFragment(), true)
