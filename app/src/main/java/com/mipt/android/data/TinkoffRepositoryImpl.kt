@@ -32,9 +32,9 @@ class TinkoffRepositoryImpl @Inject constructor(
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
 
-    override suspend fun getCandles(figi: String, interval: String): CandlesResponse {
-        val endDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
-        val startDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now().minus(365, ChronoUnit.DAYS))
+    override suspend fun getCandles(figi: String, interval: String, startDate: String, endDate: String): CandlesResponse {
+//        val endDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
+//        val startDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now().minus(365, ChronoUnit.DAYS))
         val result = api.getCandles(figi, startDate, endDate, interval)
         return result.response ?: throw TinkoffRepositoryException("Response is null")
     }
