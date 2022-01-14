@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Invest</string>
+    <string name="app_name">Инвестиции</string>
     <string name="token_name">Tinkoff Open API Токен</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>

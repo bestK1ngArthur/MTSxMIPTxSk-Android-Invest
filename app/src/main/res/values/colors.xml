@@ -8,4 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#D50000</color>
+
+    <color name="iGreen">#1DCC98</color>
+    <color name="iRed">#E77779</color>
+    <color name="iDarkGray">#03314B</color>
+    <color name="iGray">#B2B7C1</color>
+    <color name="iLightGray">#F4F8FB</color>
 </resources>
