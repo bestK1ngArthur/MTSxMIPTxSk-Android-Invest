@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Invest</string>
-    <string name="token_name">Tinkoff Open API Токен</string>
+    <string name="app_name">Инвестиции</string>
+    <string name="token_name">API Токен</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>
     <string name="profile">Профиль</string>
     <string name="how_to_get_token_name">Как получить доступ?</string>
-    <string name="how_to_get_token">1) Зайдите в аккаунт на https://tinkoff.ru/.\n2) Перейдите в раздел инвестиций.\n3) Перейдите в настройки. Функция "Подтверждение сделок кодом" должна быть отключена.\n4) Выпустите токен OpenAPI для биржи и Sandbox. Скопируйте токен и сохраните его.</string>
+    <string name="how_to_get_token">1) Зайдите в свой аккаунт на сайте.\n2) Перейдите в раздел инвестиций.\n3) Перейдите в настройки. Функция "Подтверждение сделок кодом" должна быть отключена.\n4) Выпустите токен OpenAPI для биржи и Sandbox. Скопируйте токен и сохраните его.</string>
     <string name="portfolio">Портфель</string>
     <string name="details">Детали</string>
     <string name="back">Назад</string>

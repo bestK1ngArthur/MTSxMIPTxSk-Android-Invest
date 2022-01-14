@@ -1,5 +1,6 @@
-package com.mipt.android.ui.portfolio
+package com.mipt.android.ui.details
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -13,9 +14,10 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
-import com.mipt.android.ui.details.Figi
 import com.mipt.android.ui.portfolio.PortfolioFragment
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +40,9 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 viewModelFactory.create(arguments?.getParcelable(DETAILS_FIGI_KEY)!!) as T
         }
     }
+
+    private var fromCalendar = Calendar.getInstance()
+    private var toCalendar = Calendar.getInstance()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,11 +102,45 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 }
             })
 
+            viewModel.fromDate.observe(viewLifecycleOwner, { fromDate ->
+                fromCalendar.time = fromDate
+                fromDateTextView.text = SimpleDateFormat("dd.MM.yyyy").format(fromDate)
+            })
 
+            viewModel.toDate.observe(viewLifecycleOwner, { toDate ->
+                toCalendar.time = toDate
+                toDateTextView.text = SimpleDateFormat("dd.MM.yyyy").format(toDate)
+            })
+
+            val fromDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                fromCalendar.set(Calendar.YEAR, year)
+                fromCalendar.set(Calendar.MONTH, monthOfYear)
+                fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                viewModel.setFromDate(fromCalendar.time)
+            }
+
+            fromDateTextView.setOnClickListener {
+                DatePickerDialog(requireContext(), fromDateSetListener,
+                    fromCalendar.get(Calendar.YEAR),
+                    fromCalendar.get(Calendar.MONTH),
+                    fromCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            }
+
+            val toDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                toCalendar.set(Calendar.YEAR, year)
+                toCalendar.set(Calendar.MONTH, monthOfYear)
+                toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                viewModel.setToDate(toCalendar.time)
+            }
+
+            toDateTextView.setOnClickListener {
+                DatePickerDialog(requireContext(), toDateSetListener,
+                    toCalendar.get(Calendar.YEAR),
+                    toCalendar.get(Calendar.MONTH),
+                    toCalendar.get(Calendar.DAY_OF_MONTH)).show()
+            }
         }
     }
-
-
 
     private fun showDetails() {
         parentFragmentManager.navigate(PortfolioFragment(), true)
