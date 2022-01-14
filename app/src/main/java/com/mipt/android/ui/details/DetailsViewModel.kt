@@ -1,10 +1,9 @@
-package com.mipt.android.ui.portfolio
+package com.mipt.android.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.launchWithErrorHandler

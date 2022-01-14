@@ -1,4 +1,4 @@
-package com.mipt.android.ui.portfolio
+package com.mipt.android.ui.details
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,7 +11,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
-import com.mipt.android.ui.details.Figi
 import com.mipt.android.ui.portfolio.PortfolioFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
