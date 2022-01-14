@@ -18,7 +18,6 @@ import java.time.temporal.ChronoUnit
 class HistoryItemAdapter(
     private val context: Context,
     private val dataSource: List<PortfolioResponse.PositionItem>,
-    private val tinkoffRepository: TinkoffRepository,
     private val onItemClicked: (String) -> Unit
 ) : BaseAdapter() {
 
@@ -35,12 +34,6 @@ class HistoryItemAdapter(
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
-    }
-
-    suspend fun getLastPrice(figi: String): Double {
-        val lastPrice = tinkoffRepository.getCandles(figi, "1min", DateTimeFormatter.ISO_INSTANT.format(
-            Instant.now().minus(1, ChronoUnit.MINUTES))).candles.last().c
-        return lastPrice
     }
 
     @SuppressLint("ViewHolder", "SimpleDateFormat")
