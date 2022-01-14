@@ -11,10 +11,14 @@ import android.widget.TextView
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
+import java.time.Instant
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class HistoryItemAdapter(
     private val context: Context,
     private val dataSource: List<PortfolioResponse.PositionItem>,
+    private val tinkoffRepository: TinkoffRepository,
     private val onItemClicked: (String) -> Unit
 ) : BaseAdapter() {
 
@@ -33,6 +37,12 @@ class HistoryItemAdapter(
         return position.toLong()
     }
 
+    suspend fun getLastPrice(figi: String): Double {
+        val lastPrice = tinkoffRepository.getCandles(figi, "1min", DateTimeFormatter.ISO_INSTANT.format(
+            Instant.now().minus(1, ChronoUnit.MINUTES))).candles.last().c
+        return lastPrice
+    }
+
     @SuppressLint("ViewHolder", "SimpleDateFormat")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val rowView = objectList.inflate(R.layout.portfolio_item_fragment, parent, false)
@@ -42,7 +52,7 @@ class HistoryItemAdapter(
         val lotsTextview = rowView.findViewById<TextView>(R.id.lots)
         val photo = rowView.findViewById<ImageView>(R.id.imageView)
         val recipe = getItem(position) as PortfolioResponse.PositionItem
-
+//        val lastPrice = getLastPrice(recipe.figi)
         titleTextView.text = recipe.name
         balanceTextView.text = recipe.ticker //recipe.price.toString(); /* recipe.balance.toBigDecimal().toPlainString() */
         lotsTextview.text = recipe.lots
