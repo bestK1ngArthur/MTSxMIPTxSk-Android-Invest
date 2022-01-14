@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface TinkoffAPI {
     companion object {
-        const val URL_PREFIX = "/openapi/"
+        const val URL_PREFIX = "/openapi/sandbox"
     }
 
     @POST("$URL_PREFIX/sandbox/register")
