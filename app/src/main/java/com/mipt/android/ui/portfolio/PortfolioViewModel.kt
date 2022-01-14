@@ -42,6 +42,12 @@ class PortfolioViewModel @Inject constructor(
 
             val result = tinkoffRepository.getPortfolio(accountID);
 
+            for (i in result.positions) {
+                val candleArray = tinkoffRepository.getCandles(i.figi, "1min").candles
+                i.ticker = "123" // candleArray.last().c.toString();
+            }
+
+
             _result.postValue(result.positions);
         }, onError = {
             showToast("Неверный API токен")

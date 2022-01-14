@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.mipt.android.R
+import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 
 class HistoryItemAdapter(
@@ -43,7 +44,7 @@ class HistoryItemAdapter(
         val recipe = getItem(position) as PortfolioResponse.PositionItem
 
         titleTextView.text = recipe.name
-        balanceTextView.text = recipe.balance.toBigDecimal().toPlainString()
+        balanceTextView.text = recipe.ticker //recipe.price.toString(); /* recipe.balance.toBigDecimal().toPlainString() */
         lotsTextview.text = recipe.lots
 
         if (recipe.instrumentType == "Currency") {
