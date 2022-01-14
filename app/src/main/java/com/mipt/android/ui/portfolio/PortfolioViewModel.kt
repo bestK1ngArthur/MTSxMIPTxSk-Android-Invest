@@ -70,8 +70,9 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private suspend fun getLastPrice(figi: String): Double {
-        val lastPrice = tinkoffRepository.getCandles(figi, "1min", DateTimeFormatter.ISO_INSTANT.format(
-            Instant.now().minus(2, ChronoUnit.MINUTES))).candles.last().c
+        val lastPrice = tinkoffRepository.getCandles(figi, "month", DateTimeFormatter.ISO_INSTANT.format(
+            Instant.now().minus(30, ChronoUnit.DAYS))).candles.last().c
+
         return lastPrice
     }
 
