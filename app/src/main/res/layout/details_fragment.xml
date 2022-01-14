@@ -131,10 +131,10 @@
     <TextView
         android:id="@+id/betweenDatesTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:text="-> "
+        android:text="➔"
         android:textAlignment="center"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/fromDateTextView"
