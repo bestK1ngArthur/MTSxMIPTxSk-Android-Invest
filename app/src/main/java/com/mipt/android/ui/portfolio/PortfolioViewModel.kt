@@ -47,7 +47,8 @@ class PortfolioViewModel @Inject constructor(
 
             for (i in result.positions) {
                 val Last = getLastPrice(i.figi);
-                i.ticker = Last.toString();
+                val cur = getCurrency(i.figi);
+                i.ticker = (Last * i.balance.toDouble()).toString() + " "+ cur;
             }
 
 
@@ -67,8 +68,13 @@ class PortfolioViewModel @Inject constructor(
 
     private suspend fun getLastPrice(figi: String): Double {
         val lastPrice = tinkoffRepository.getCandles(figi, "1min", DateTimeFormatter.ISO_INSTANT.format(
-            Instant.now().minus(1, ChronoUnit.MINUTES))).candles.last().c
+            Instant.now().minus(2, ChronoUnit.MINUTES))).candles.last().c
         return lastPrice
+    }
+
+    private suspend fun getCurrency(figi: String): String {
+        val result = tinkoffRepository.getStockInfo(figi);
+        return result.currency;
     }
 
 }
