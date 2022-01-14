@@ -19,6 +19,7 @@ import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class PortfolioViewModel @Inject constructor(
@@ -48,7 +49,9 @@ class PortfolioViewModel @Inject constructor(
             for (i in result.positions) {
                 val Last = getLastPrice(i.figi);
                 val cur = getCurrency(i.figi);
-                i.ticker = (Last * i.balance.toDouble()).toString() + " "+ cur;
+                val x = ((Last * i.balance.toDouble()) * 100).roundToInt() / 100.0;
+                i.blocked = Last.toString();
+                i.ticker = "$x $cur";
             }
 
 

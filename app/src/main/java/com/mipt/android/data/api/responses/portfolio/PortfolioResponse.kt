@@ -13,6 +13,7 @@ data class PortfolioResponse (
         val lots: String,
         val name: String,
         val balance: String,
-        var ticker: String
+        var ticker: String,
+        var blocked: String,
     )
 }
