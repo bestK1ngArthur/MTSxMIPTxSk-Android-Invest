@@ -41,6 +41,14 @@ class DetailsViewModel @AssistedInject constructor(
         get() = _stockName
     private var _stockName = MutableLiveData<String?>()
 
+    val stockCurrency: LiveData<String?>
+        get() = _stockCurrency
+    private var _stockCurrency = MutableLiveData<String?>()
+
+    val lastPrice: LiveData<String?>
+        get() = _lastPrice
+    private var _lastPrice = MutableLiveData<String?>()
+
     val candleStickChart: LiveData<CandleData?>
             get() = _candleStickChart
     private var _candleStickChart = MutableLiveData<CandleData?>()
@@ -54,11 +62,13 @@ class DetailsViewModel @AssistedInject constructor(
     private val _toast = MutableLiveData<String?>()
 
 
-    fun getCandleArray(){
+    fun getCandleArray(interval: String="month"){
         viewModelScope.launchWithErrorHandler(block = {
-            var candleArray = tinkoffRepository.getCandles(figi.id).candles
+            var candleArray = tinkoffRepository.getCandles(figi.id, interval).candles
+            val lastPrice = candleArray.last().c
             val candleData = getCandlesData(candleArray)
             _candleStickChart.postValue(candleData)
+            _lastPrice.postValue("$lastPrice")
 
 
         }, onError = {
@@ -69,8 +79,11 @@ class DetailsViewModel @AssistedInject constructor(
 
     fun getStockInfo(){
         viewModelScope.launchWithErrorHandler(block = {
-            var stockName = tinkoffRepository.getStockInfo(figi.id).name
+            val stock = tinkoffRepository.getStockInfo(figi.id)
+            var stockName = stock.name
+            val stockCurrency = stock.currency
             _stockName.postValue(stockName)
+            _stockCurrency.postValue(stockCurrency)
         }, onError = {
             showToast("Неверные фиги")
         })
@@ -90,7 +103,7 @@ class DetailsViewModel @AssistedInject constructor(
             ))
             value += 1
         }
-        val candleDataset = CandleDataSet(candleStickEntry, candleArray[0].figi)
+        val candleDataset = CandleDataSet(candleStickEntry, candleArray[0].interval)
 
         candleDataset.color = Color.rgb(80, 80, 80)
         val red = Color.rgb(255, 0,0)

@@ -41,7 +41,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getCandleArray()
+        viewModel.getCandleArray("month")
         viewModel.getStockInfo()
 
         with(viewBinding) {
@@ -49,15 +49,27 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 showDetails()
             }
 
+            day.setOnClickListener {
+                viewModel.getCandleArray("day")
+            }
+
+            week.setOnClickListener {
+                viewModel.getCandleArray("week")
+            }
+
+            month.setOnClickListener {
+                viewModel.getCandleArray("month")
+            }
+
             viewModel.candleStickChart.observe(viewLifecycleOwner, { candleStickChart ->
-//                candleStickChartImg.data = candleStickChart
-//                candleStickChartImg.invalidate()
+
                 if (candleStickChart != null) {
                     candleStickChartImg.data = candleStickChart
 
                 } else {
                     candleStickChartImg.data = null
                 }
+                candleStickChartImg.setDescription("Свечи")
                 candleStickChartImg.invalidate()
             })
 
@@ -66,6 +78,22 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                     stockNameTextView.text = "$stockName"
                 } else {
                     stockNameTextView.text = null
+                }
+            })
+
+            viewModel.stockCurrency.observe(viewLifecycleOwner, { stockCurrency ->
+                if (stockCurrency != null) {
+                    currencyTextView.text = "Валюта: $stockCurrency"
+                } else {
+                    currencyTextView.text = null
+                }
+            })
+
+            viewModel.lastPrice.observe(viewLifecycleOwner, { lastPrice ->
+                if (lastPrice != null) {
+                    lastPriceTextView.text = "Последняя цена: $lastPrice"
+                } else {
+                    lastPriceTextView.text = null
                 }
             })
 
