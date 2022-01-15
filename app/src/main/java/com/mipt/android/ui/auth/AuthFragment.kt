@@ -1,14 +1,13 @@
 package com.mipt.android.ui.auth
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.mipt.android.databinding.AuthFragmentBinding
 import com.mipt.android.R
+import com.mipt.android.databinding.AuthFragmentBinding
 import com.mipt.android.tools.navigate
 import com.mipt.android.ui.portfolio.PortfolioFragment
 import dagger.hilt.android.AndroidEntryPoint

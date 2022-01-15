@@ -1,14 +1,12 @@
 package com.mipt.android.ui.portfolio
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mipt.android.common.SingleLiveEvent
 import com.mipt.android.data.TinkoffRepository
-import com.mipt.android.data.api.responses.StockInfoResponse
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
@@ -42,20 +40,20 @@ class PortfolioViewModel @Inject constructor(
 
     init {
         viewModelScope.launchWithErrorHandler(block = {
-            val accountID = sessionManager.getBrokerAccountId();
+            val accountID = sessionManager.getBrokerAccountId()
 
-            val result = tinkoffRepository.getPortfolio(accountID);
+            val result = tinkoffRepository.getPortfolio(accountID)
 
             for (i in result.positions) {
-                val Last = getLastPrice(i.figi);
-                val cur = getCurrency(i.figi);
-                val x = ((Last * i.balance.toDouble()) * 100).roundToInt() / 100.0;
-                i.blocked = Last.toString();
-                i.ticker = "$x $cur";
+                val Last = getLastPrice(i.figi)
+                val cur = getCurrency(i.figi)
+                val x = ((Last * i.balance.toDouble()) * 100).roundToInt() / 100.0
+                i.blocked = Last.toString()
+                i.ticker = "$x $cur"
             }
 
 
-            _result.postValue(result.positions);
+            _result.postValue(result.positions)
         }, onError = {
             showToast("Неверный API токен")
         })
@@ -70,15 +68,18 @@ class PortfolioViewModel @Inject constructor(
     }
 
     private suspend fun getLastPrice(figi: String): Double {
-        val lastPrice = tinkoffRepository.getCandles(figi, "month", DateTimeFormatter.ISO_INSTANT.format(
-            Instant.now().minus(30, ChronoUnit.DAYS))).candles.last().c
+        val lastPrice = tinkoffRepository.getCandles(
+            figi, "month", DateTimeFormatter.ISO_INSTANT.format(
+                Instant.now().minus(30, ChronoUnit.DAYS)
+            )
+        ).candles.last().c
 
         return lastPrice
     }
 
     private suspend fun getCurrency(figi: String): String {
-        val result = tinkoffRepository.getStockInfo(figi);
-        return result.currency;
+        val result = tinkoffRepository.getStockInfo(figi)
+        return result.currency
     }
 
 }

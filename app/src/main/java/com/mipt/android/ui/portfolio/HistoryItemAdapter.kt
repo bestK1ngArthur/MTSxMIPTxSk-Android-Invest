@@ -9,11 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.mipt.android.R
-import com.mipt.android.data.TinkoffRepository
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
-import java.time.Instant
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 class HistoryItemAdapter(
     private val context: Context,
@@ -49,9 +45,10 @@ class HistoryItemAdapter(
         val recipe = getItem(position) as PortfolioResponse.PositionItem
 //        val lastPrice = getLastPrice(recipe.figi)
         titleTextView.text = recipe.name
-        balanceTextView.text = recipe.ticker //recipe.price.toString(); /* recipe.balance.toBigDecimal().toPlainString() */
+        balanceTextView.text =
+            recipe.ticker //recipe.price.toString(); /* recipe.balance.toBigDecimal().toPlainString() */
         lotsTextview.text = recipe.balance.toBigDecimal().toPlainString() + " шт. "
-        price_.text = recipe.blocked;
+        price_.text = recipe.blocked
 
         if (recipe.instrumentType == "Currency") {
             photo.setImageResource(R.drawable.icon_money)
