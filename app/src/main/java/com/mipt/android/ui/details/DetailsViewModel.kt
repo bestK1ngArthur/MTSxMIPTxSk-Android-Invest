@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.icu.text.SimpleDateFormat
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,26 +14,18 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
-import com.mipt.android.data.api.responses.UserAccountsResponse
 import com.mipt.android.launchWithErrorHandler
-import com.mipt.android.ui.details.Figi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-//import android.R
-
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.mipt.android.data.api.responses.CandlesResponse
-import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class DetailsViewModel @AssistedInject constructor(
     @Assisted private val figi: Figi,
@@ -103,7 +94,6 @@ class DetailsViewModel @AssistedInject constructor(
     }
 
     fun getCandlesData(candleArray: List<CandlesResponse.Candle>): CandleData {
-        val candleSize = candleArray.size
         val xvalue = ArrayList<String>()
         val candleStickEntry = ArrayList<CandleEntry>()
 
@@ -129,21 +119,38 @@ class DetailsViewModel @AssistedInject constructor(
         val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         val formatter = SimpleDateFormat("dd.MM.yyyy")
         val candleData = CandleData(candleArray.map{formatter.format(parser.parse(it.time))}, candleDataset)
-//        _candleStickImg.data = candleData
 
         return candleData
     }
 
     fun setFromDate(date: Date) {
+        if (!checkDates(date, toDate.value)) {
+            showToast("Неверная дата")
+            return
+        }
+
         _fromDate.postValue(date)
 
         getCandleArray()
     }
 
     fun setToDate(date: Date) {
+        if (!checkDates(fromDate.value, date)) {
+            showToast("Неверная дата")
+            return
+        }
+
         _toDate.postValue(date)
 
         getCandleArray()
+    }
+
+    private fun checkDates(from: Date?, to: Date?): Boolean {
+        if (from != null && to != null) {
+            return from < to
+        }
+
+        return false
     }
 
     private fun getCandleArray(interval: String="month", startInstant: Instant, endInstant: Instant) {
