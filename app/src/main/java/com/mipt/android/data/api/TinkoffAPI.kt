@@ -1,9 +1,8 @@
 package com.mipt.android.data.api
 
-import com.mipt.android.data.api.requests.*
+import com.mipt.android.data.api.requests.RegisterRequest
 import com.mipt.android.data.api.responses.*
 import com.mipt.android.data.api.responses.portfolio.PortfolioResponse
-
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,19 +16,20 @@ interface TinkoffAPI {
     @POST("$URL_PREFIX/sandbox/register")
     suspend fun register(
         @Body request: RegisterRequest
-    ) : APIResult<RegisterResponse>
+    ): APIResult<RegisterResponse>
 
     @POST("$URL_PREFIX/sandbox/remove")
     suspend fun remove(
         @Query("brokerAccountId") brokerAccountId: String
-    ) : APIResult<VoidResponse>
+    ): APIResult<VoidResponse>
 
     @GET("$URL_PREFIX/user/accounts")
-    suspend fun getUserAccounts() : APIResult<UserAccountsResponse>
+    suspend fun getUserAccounts(): APIResult<UserAccountsResponse>
 
     @GET("$URL_PREFIX/market/candles")
-    suspend fun getCandles(@Query("figi") figi: String, @Query("from") startDate: String,
-                           @Query("to") endDate: String, @Query("interval") interval: String,
+    suspend fun getCandles(
+        @Query("figi") figi: String, @Query("from") startDate: String,
+        @Query("to") endDate: String, @Query("interval") interval: String,
     ): APIResult<CandlesResponse>
 
     @GET("$URL_PREFIX/portfolio")
@@ -38,6 +38,7 @@ interface TinkoffAPI {
     ): APIResult<PortfolioResponse>
 
     @GET("$URL_PREFIX/market/search/by-figi")
-    suspend fun getStockInfo(@Query("figi") figi: String
+    suspend fun getStockInfo(
+        @Query("figi") figi: String
     ): APIResult<StockInfoResponse>
 }

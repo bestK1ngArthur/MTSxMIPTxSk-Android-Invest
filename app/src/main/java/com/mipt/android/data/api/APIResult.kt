@@ -1,6 +1,7 @@
 package com.mipt.android.data.api
 
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class APIResult<APIResponse>(

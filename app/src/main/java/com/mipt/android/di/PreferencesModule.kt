@@ -14,5 +14,6 @@ class PreferencesModule {
 
     @Provides
     @Singleton
-    fun getRepository(sharedPreferences: SharedPreferences): SessionManager = SessionManager(sharedPreferences)
+    fun getRepository(sharedPreferences: SharedPreferences): SessionManager =
+        SessionManager(sharedPreferences)
 }

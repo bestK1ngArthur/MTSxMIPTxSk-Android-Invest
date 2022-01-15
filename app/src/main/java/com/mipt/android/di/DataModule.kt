@@ -32,7 +32,8 @@ class DataModule {
 
         @Provides
         @Singleton
-        fun provideTokenManager(sharedPreferences: SharedPreferences) = TokenManager(sharedPreferences)
+        fun provideTokenManager(sharedPreferences: SharedPreferences) =
+            TokenManager(sharedPreferences)
 
         @Provides
         @Singleton

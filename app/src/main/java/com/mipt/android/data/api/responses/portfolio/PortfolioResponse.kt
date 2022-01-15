@@ -3,7 +3,7 @@ package com.mipt.android.data.api.responses.portfolio
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PortfolioResponse (
+data class PortfolioResponse(
     val positions: List<PositionItem>
 ) {
     @Serializable

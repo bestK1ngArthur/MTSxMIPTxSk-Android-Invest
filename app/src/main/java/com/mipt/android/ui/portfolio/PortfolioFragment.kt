@@ -1,9 +1,10 @@
 package com.mipt.android.ui.portfolio
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.*
+import android.widget.ListView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.mipt.android.R
@@ -30,11 +31,16 @@ class PortfolioFragment : Fragment(R.layout.portfolio_fragment) {
             viewModel.toast.observe(viewLifecycleOwner, { error ->
                 val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
                 toast.show()
-            });
+            })
 
             viewModel.result.observe(viewLifecycleOwner, { array ->
                 val listView: ListView = listPortfoli
-                val adapter = activity?.let { it -> HistoryItemAdapter(it, array) { figi -> showDetails(figi) } }
+                val adapter = activity?.let { it ->
+                    HistoryItemAdapter(
+                        it,
+                        array
+                    ) { figi -> showDetails(figi) }
+                }
                 listView.adapter = adapter
             })
 

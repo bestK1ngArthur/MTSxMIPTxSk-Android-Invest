@@ -2,15 +2,14 @@ package com.mipt.android.ui.details
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.github.mikephil.charting.data.CandleDataSet
-import com.github.mikephil.charting.data.CandleEntry
 import com.mipt.android.R
 import com.mipt.android.databinding.DetailsFragmentBinding
 import com.mipt.android.tools.navigate
@@ -34,7 +33,7 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
     lateinit var viewModelFactory: DetailsViewModel.Factory
 
     private val viewBinding by viewBinding(DetailsFragmentBinding::bind)
-    private val viewModel by viewModels<DetailsViewModel>() {
+    private val viewModel by viewModels<DetailsViewModel> {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T =
                 viewModelFactory.create(arguments?.getParcelable(DETAILS_FIGI_KEY)!!) as T
@@ -112,33 +111,44 @@ class DetailsFragment : Fragment(R.layout.details_fragment) {
                 toDateTextView.text = SimpleDateFormat("dd.MM.yyyy").format(toDate)
             })
 
-            val fromDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                fromCalendar.set(Calendar.YEAR, year)
-                fromCalendar.set(Calendar.MONTH, monthOfYear)
-                fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                viewModel.setFromDate(fromCalendar.time)
-            }
+            val fromDateSetListener =
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    fromCalendar.set(Calendar.YEAR, year)
+                    fromCalendar.set(Calendar.MONTH, monthOfYear)
+                    fromCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    viewModel.setFromDate(fromCalendar.time)
+                }
 
             fromDateTextView.setOnClickListener {
-                DatePickerDialog(requireContext(), fromDateSetListener,
+                DatePickerDialog(
+                    requireContext(), fromDateSetListener,
                     fromCalendar.get(Calendar.YEAR),
                     fromCalendar.get(Calendar.MONTH),
-                    fromCalendar.get(Calendar.DAY_OF_MONTH)).show()
+                    fromCalendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
             }
 
-            val toDateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                toCalendar.set(Calendar.YEAR, year)
-                toCalendar.set(Calendar.MONTH, monthOfYear)
-                toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                viewModel.setToDate(toCalendar.time)
-            }
+            val toDateSetListener =
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    toCalendar.set(Calendar.YEAR, year)
+                    toCalendar.set(Calendar.MONTH, monthOfYear)
+                    toCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    viewModel.setToDate(toCalendar.time)
+                }
 
             toDateTextView.setOnClickListener {
-                DatePickerDialog(requireContext(), toDateSetListener,
+                DatePickerDialog(
+                    requireContext(), toDateSetListener,
                     toCalendar.get(Calendar.YEAR),
                     toCalendar.get(Calendar.MONTH),
-                    toCalendar.get(Calendar.DAY_OF_MONTH)).show()
+                    toCalendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
             }
+
+            viewModel.toast.observe(viewLifecycleOwner, { error ->
+                val toast = Toast.makeText(context, error, Toast.LENGTH_LONG)
+                toast.show()
+            })
         }
     }
 

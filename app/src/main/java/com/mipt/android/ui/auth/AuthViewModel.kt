@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.mipt.android.R
 import com.mipt.android.data.TinkoffRepository
-import com.mipt.android.data.api.responses.CandlesResponse
 import com.mipt.android.data.api.responses.UserAccountsResponse
-import com.mipt.android.preferences.TokenManager
 import com.mipt.android.launchWithErrorHandler
 import com.mipt.android.preferences.SessionManager
+import com.mipt.android.preferences.TokenManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -109,7 +108,10 @@ class AuthViewModel @Inject constructor(
 
             if (userAccount == null) {
                 val response = tinkoffRepository.registerAccount()
-                userAccount = UserAccountsResponse.Account(response.brokerAccountType, response.brokerAccountId)
+                userAccount = UserAccountsResponse.Account(
+                    response.brokerAccountType,
+                    response.brokerAccountId
+                )
             }
 
             sessionManager.createSession(userAccount.brokerAccountId)
